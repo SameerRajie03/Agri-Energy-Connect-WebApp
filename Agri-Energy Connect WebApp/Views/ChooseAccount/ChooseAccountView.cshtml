@@ -1,0 +1,56 @@
+﻿@model Agri_Energy_Connect_WebApp.Controllers.ChooseAccountController
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Choose Account Type";
+}
+
+<h1>Choose Account Type</h1>
+
+<form method="post" asp-controller="ChooseAccount" asp-action="ProcessAccountType">
+    <div>
+        <input type="radio" id="employee" name="accountType" value="Employee" />
+        <label for="employee">Employee</label>
+    </div>
+    <div>
+        <input type="radio" id="farmer" name="accountType" value="Farmer" />
+        <label for="farmer">Farmer</label>
+    </div>
+
+    <div id="employeeIdField" style="display:none;">
+        <label for="employeeId">Employee ID:</label>
+        <input type="text" id="employeeId" name="employeeId" />
+    </div>
+    <div id="farmerIdField" style="display:none;">
+        <label for="farmerId">Farmer ID:</label>
+        <input type="text" id="farmerId" name="farmerId" />
+    </div>
+
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var employeeRadio = document.getElementById("employee");
+            var farmerRadio = document.getElementById("farmer");
+            var employeeIdField = document.getElementById("employeeIdField");
+            var farmerIdField = document.getElementById("farmerIdField");
+
+            employeeRadio.addEventListener("change", function () {
+                if (this.checked) {
+                    employeeIdField.style.display = "block";
+                    farmerIdField.style.display = "none";
+                }
+            });
+
+            farmerRadio.addEventListener("change", function () {
+                if (this.checked) {
+                    farmerIdField.style.display = "block";
+                    employeeIdField.style.display = "none";
+                }
+            });
+        });
+    </script>
+}
