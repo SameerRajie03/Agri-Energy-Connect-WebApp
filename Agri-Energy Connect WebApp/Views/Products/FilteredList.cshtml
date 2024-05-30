@@ -54,8 +54,8 @@
                 <td>@product.Name</td>
                 <td>@product.Description</td>
                 <td>@product.ProductionDate.ToShortDateString()</td>
-                <td>@product.Category?.CategoryName</td>
-                <td>@product.Farmer?.FarmerName</td>
+                <td>@product.Category?.Description</td>
+                <td>@(product.Farmer != null ? product.Farmer.Name + " " + product.Farmer.Surname : "")</td>
             </tr>
         }
     </tbody>

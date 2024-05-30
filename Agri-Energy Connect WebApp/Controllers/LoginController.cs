@@ -12,6 +12,8 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
         public LoginController(Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext context)
         {
+            GetSet.UserFarmer = 0;
+            GetSet.UserEmployee = "";
             _context = context;
         }
 
@@ -23,42 +25,51 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
-            Validation val = new Validation();
             bool isAuthenticated = false;
             // Check if the model is valid
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            if (!val.UsernameExists(model.Username, _context))
+            if (!Validation.UsernameExists(model.Username, _context))
             {
-                if(!val.FarmerExists(model.Username, _context))
+                if (!Validation.FarmerExists(model.Username, _context))
                 {
                     isAuthenticated = AuthenticateFarmer(model.Username, model.Password);
+                    if (isAuthenticated)
+                    {
+                        return RedirectToRoute("/Home/IndexFarmer");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
+                        return View();
+                    }
                 }
-                if(!val.EmployeeExists(model.Username, _context))
+                if (!Validation.EmployeeExists(model.Username, _context))
                 {
                     isAuthenticated = AuthenticateEmployee(model.Username, model.Password);
+                    if (isAuthenticated)
+                    {
+                        return RedirectToRoute("/Home/IndexEmployee");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
+                        return View();
+                    }
                 }
-
-                if (!isAuthenticated)
+                else
                 {
                     ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
                     return View();
                 }
-                else
-                {
-                    return RedirectToRoute("/Home/Index");
-                }
-
             }
             else
             {
-
+                ModelState.AddModelError(string.Empty, "Username or Password is Incorrect");
+                return View();
             }
-            
-            
         }
 
 

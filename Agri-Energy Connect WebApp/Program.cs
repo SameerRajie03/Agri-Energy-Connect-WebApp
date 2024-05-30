@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Agri_Energy_Connect_WebApp.Data;
+using Agri_Energy_Connect_WebApp.Models;
+using Agri_Energy_Connect_WebApp.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Agri_Energy_Connect_WebAppContext>(options =>
@@ -10,6 +12,8 @@ builder.Services.AddDbContext<Agri_Energy_Connect_WebAppContext>(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+SeedDatabase(app);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -31,3 +35,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+void SeedDatabase(IHost app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+
+        DbData.InitializeCategories(services);
+    }
+}

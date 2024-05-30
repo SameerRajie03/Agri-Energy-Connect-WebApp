@@ -16,22 +16,26 @@
                     <a class="nav-link" asp-controller="ChooseAccount" asp-action="ChooseAccountView">Choose Account Type</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-page="/ChooseAccountType">Choose Account Type</a>
+                    <a class="nav-link" asp-controller="Login" asp-action="Login">Login</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Product</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" asp-controller="Product" asp-action="Create">Create</a>
+                        <a class="dropdown-item" asp-controller="Product" asp-action="Edit">Edit</a>
+                        <a class="dropdown-item" asp-controller="Product" asp-action="Delete">Delete</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Separated link</a>
+                        <a class="dropdown-item" asp-controller="Product" asp-action="FilteredList">List</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Farmer</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" asp-controller="Farmer" asp-action="Create">Create</a>
+                        <a class="dropdown-item" asp-controller="Farmer" asp-action="Edit">Edit</a>
+                        <a class="dropdown-item" asp-controller="Farmer" asp-action="Delete">Delete</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" asp-controller="Farmer" asp-action="Index">List</a>
                     </div>
                 </li>
             </ul>

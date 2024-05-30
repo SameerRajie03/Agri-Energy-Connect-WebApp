@@ -22,31 +22,58 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Category.ToListAsync());
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
+
+            if (loginCheckResult != null)
+            {
+                return loginCheckResult;
+            }
+            else
+            {
+                return View(await _context.Category.ToListAsync());
+            }
         }
 
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var category = await _context.Category
-                .FirstOrDefaultAsync(m => m.CategporyId == id);
-            if (category == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(category);
+                var category = await _context.Category
+                    .FirstOrDefaultAsync(m => m.CategporyId == id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+
+                return View(category);
+            }
         }
 
         // GET: Categories/Create
         public IActionResult Create()
         {
-            return View();
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
+
+            if (loginCheckResult != null)
+            {
+                return loginCheckResult;
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // POST: Categories/Create
@@ -68,17 +95,26 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var category = await _context.Category.FindAsync(id);
-            if (category == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
-            return View(category);
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var category = await _context.Category.FindAsync(id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+                return View(category);
+            }
         }
 
         // POST: Categories/Edit/5
@@ -119,19 +155,28 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var category = await _context.Category
-                .FirstOrDefaultAsync(m => m.CategporyId == id);
-            if (category == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(category);
+                var category = await _context.Category
+                    .FirstOrDefaultAsync(m => m.CategporyId == id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+
+                return View(category);
+            }
         }
 
         // POST: Categories/Delete/5

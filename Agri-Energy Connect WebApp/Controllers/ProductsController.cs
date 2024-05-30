@@ -32,36 +32,65 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var agri_Energy_Connect_WebAppContext = _context.Product.Include(p => p.Category).Include(p => p.Farmer);
-            return View(await agri_Energy_Connect_WebAppContext.ToListAsync());
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
+
+            if (loginCheckResult != null)
+            {
+                return loginCheckResult;
+            }
+            else
+            {
+                var agri_Energy_Connect_WebAppContext = _context.Product.Include(p => p.Category).Include(p => p.Farmer);
+                return View(await agri_Energy_Connect_WebAppContext.ToListAsync());
+            }
+            
         }
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var product = await _context.Product
-                .Include(p => p.Category)
-                .Include(p => p.Farmer)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(product);
+                var product = await _context.Product
+                    .Include(p => p.Category)
+                    .Include(p => p.Farmer)
+                    .FirstOrDefaultAsync(m => m.ProductId == id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                return View(product);
+            }
+            
         }
 
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description");
-            ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name");
-            return View();
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
+
+            if (loginCheckResult != null)
+            {
+                return loginCheckResult;
+            }
+            else
+            {
+                ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description");
+                ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name");
+                return View();
+            }
         }
 
         // POST: Products/Create
@@ -86,19 +115,28 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var product = await _context.Product.FindAsync(id);
-            if (product == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description", product.CategoryId);
-            ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name", product.FarmerId);
-            return View(product);
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var product = await _context.Product.FindAsync(id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+                ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description", product.CategoryId);
+                ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name", product.FarmerId);
+                return View(product);
+            }
         }
 
         // POST: Products/Edit/5
@@ -141,21 +179,30 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var product = await _context.Product
-                .Include(p => p.Category)
-                .Include(p => p.Farmer)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(product);
+                var product = await _context.Product
+                    .Include(p => p.Category)
+                    .Include(p => p.Farmer)
+                    .FirstOrDefaultAsync(m => m.ProductId == id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                return View(product);
+            }
         }
 
         // POST: Products/Delete/5
@@ -180,37 +227,46 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
         public async Task<IActionResult> FilteredList(int? selectedCategoryId, DateTime? startDate, DateTime? endDate)
         {
-            var products = from p in _context.Product.Include(p => p.Category).Include(p => p.Farmer)
-                           select p;
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            if (selectedCategoryId.HasValue)
+            if (loginCheckResult != null)
             {
-                products = products.Where(p => p.CategoryId == selectedCategoryId.Value);
+                return loginCheckResult;
             }
-
-            if (startDate.HasValue)
+            else
             {
-                products = products.Where(p => p.ProductionDate >= startDate.Value);
+                var products = from p in _context.Product.Include(p => p.Category).Include(p => p.Farmer)
+                               select p;
+
+                if (selectedCategoryId.HasValue)
+                {
+                    products = products.Where(p => p.CategoryId == selectedCategoryId.Value);
+                }
+
+                if (startDate.HasValue)
+                {
+                    products = products.Where(p => p.ProductionDate >= startDate.Value);
+                }
+
+                if (endDate.HasValue)
+                {
+                    products = products.Where(p => p.ProductionDate <= endDate.Value);
+                }
+
+                var categories = await _context.Category.ToListAsync();
+
+                var viewModel = new ProductViewModel
+                {
+                    Products = await products.ToListAsync(),
+                    SelectedCategoryId = selectedCategoryId,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    Categories = categories
+                };
+
+                return View(viewModel);
             }
-
-            if (endDate.HasValue)
-            {
-                products = products.Where(p => p.ProductionDate <= endDate.Value);
-            }
-
-            var categories = await _context.Category.ToListAsync();
-
-            var viewModel = new ProductViewModel
-            {
-                Products = await products.ToListAsync(),
-                SelectedCategoryId = selectedCategoryId,
-                StartDate = startDate,
-                EndDate = endDate,
-                Categories = categories
-            };
-
-            return View(viewModel);
         }
     }
 }
-}
+

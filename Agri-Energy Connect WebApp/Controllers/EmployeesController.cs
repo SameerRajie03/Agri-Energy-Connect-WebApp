@@ -22,31 +22,58 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employee.ToListAsync());
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
+
+            if (loginCheckResult != null)
+            {
+                return loginCheckResult;
+            }
+            else
+            {
+                return View(await _context.Employee.ToListAsync());
+            }
         }
 
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(employee);
+                var employee = await _context.Employee
+                    .FirstOrDefaultAsync(m => m.EmployeeId == id);
+                if (employee == null)
+                {
+                    return NotFound();
+                }
+
+                return View(employee);
+            }
         }
 
         // GET: Employees/Create
         public IActionResult Create()
         {
-            return View();
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
+
+            if (loginCheckResult != null)
+            {
+                return loginCheckResult;
+            }
+            else
+            {
+                return View();
+            }
         }
 
         // POST: Employees/Create
@@ -69,17 +96,26 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var employee = await _context.Employee.FindAsync(id);
-            if (employee == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
-            return View(employee);
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var employee = await _context.Employee.FindAsync(id);
+                if (employee == null)
+                {
+                    return NotFound();
+                }
+                return View(employee);
+            }
         }
 
         // POST: Employees/Edit/5
@@ -120,19 +156,28 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
+            if (loginCheckResult != null)
             {
-                return NotFound();
+                return loginCheckResult;
             }
+            else
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(employee);
+                var employee = await _context.Employee
+                    .FirstOrDefaultAsync(m => m.EmployeeId == id);
+                if (employee == null)
+                {
+                    return NotFound();
+                }
+
+                return View(employee);
+            }
         }
 
         // POST: Employees/Delete/5
