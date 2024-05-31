@@ -1,13 +1,13 @@
 ﻿<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" asp-controller="Home" asp-action="IndexEmployee">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link active" asp-controller="Home" asp-action="IndexEmployee">
                         Home
                         <span class="visually-hidden">(current)</span>
                     </a>
@@ -16,17 +16,11 @@
                     <a class="nav-link" asp-controller="Farmers" asp-action="Create">Add New Farmer</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Farmers" asp-action="FilteredList">View List of Products</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-page="/ChooseAccountType">Choose Account Type</a>
+                    <a class="nav-link" asp-controller="Farmers" asp-action="Index">View List of Products</a>
                 </li>
             </ul>
             <form class="d-flex">
-                <a asp-page="/LoginView/Login" class="btn btn-light">Log Out</a>
+                <a asp-controller="LoginView" asp-action="Login" class="btn btn-light">Log Out</a>
             </form>
         </div>
     </div>

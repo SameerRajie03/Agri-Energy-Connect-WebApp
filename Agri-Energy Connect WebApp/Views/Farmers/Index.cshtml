@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "_LayoutEmployee";
 }
 
 @if (TempData["SuccessMessage"] != null)
@@ -53,7 +54,7 @@
                 @Html.DisplayFor(modelItem => item.Username)
             </td>
             <td>
-                    | <a asp-action="FilteredList" asp-route-id="@item.FarmerId">Select</a> |
+                    | <a asp-controller="Products" asp-action="FilteredList" asp-route-id="@item.FarmerId">Select</a> |
             </td>
         </tr>
 }

@@ -16,7 +16,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             _context = context;
         }
 
-        public IActionResult ProcessAccountType()
+        public IActionResult ChooseAccountView()
         {
             return View();
         }
@@ -26,9 +26,10 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         {
             if (accountType == "Employee")
             {
-                if (!Validation.EmployeeExists(employeeId, _context))
+                if (!Validation.EmployeeExistsId(employeeId, _context))
                 {
                     ModelState.AddModelError("EmployeeId", "Must Enter an Existing Employee ID");
+                    TempData["ErrorMessage"] = "Must enter an Existing Employee ID";
                     return View("ChooseAccountView");
                 }
                 else
@@ -38,9 +39,10 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             else if (accountType == "Farmer")
             {
-                if (!Validation.FarmerExists(farmerId, _context))
+                if (!Validation.FarmerExistsId(farmerId, _context))
                 {
                     ModelState.AddModelError("FarmerId", "Must Enter an Existing Farmer ID");
+                    TempData["ErrorMessage"] = "Must enter a valid Employee ID";
                     return View("ChooseAccountView");
                 }
                 else

@@ -17,12 +17,12 @@ namespace Agri_Energy_Connect_WebApp.Workers
                 if (!context.Category.Any())
                 {
                     context.Category.AddRange(
-                        new Category { CategporyId = 1, Description = "Fruits/Vegetables" },
-                        new Category { CategporyId = 2, Description = "Dairy" },
-                        new Category { CategporyId = 3, Description = "Meat" },
-                        new Category { CategporyId = 4, Description = "Beverage" },
-                        new Category { CategporyId = 5, Description = "Seed" },
-                        new Category { CategporyId = 6, Description = "Other" }
+                        new Category { Description = "Fruits/Vegetables" },
+                        new Category { Description = "Dairy" },
+                        new Category { Description = "Meat" },
+                        new Category { Description = "Beverage" },
+                        new Category { Description = "Seed" },
+                        new Category { Description = "Other" }
                     );
 
                     context.SaveChanges();
@@ -46,9 +46,9 @@ namespace Agri_Energy_Connect_WebApp.Workers
                 if (!context.Employee.Any())
                 {
                     context.Employee.AddRange(
-                        new Employee { EmployeeId = "E001", Name = "John", Surname = "Doe"},
-                        new Employee { EmployeeId = "E002", Name = "Jane", Surname = "Smith"},
-                        new Employee { EmployeeId = "E003", Name = "Bob", Surname = "Johnson"}
+                        new Employee { EmployeeId = "E001", Name = "John", Surname = "Doe", Username = "JohnDoe"},
+                        new Employee { EmployeeId = "E002", Name = "Jane", Surname = "Smith", Username = "JaneSmith"},
+                        new Employee { EmployeeId = "E003", Name = "Bob", Surname = "Johnson", Username = "BobJohnson"}
                     );
 
                     context.SaveChanges();
@@ -72,9 +72,9 @@ namespace Agri_Energy_Connect_WebApp.Workers
                 if (!context.Farmer.Any())
                 {
                     context.Farmer.AddRange(
-                        new Farmer { FarmerId = 1, Name = "Alice", Surname = "Wonderland"},
-                        new Farmer { FarmerId = 2, Name = "Bob", Surname = "Builder"},
-                        new Farmer { FarmerId = 3, Name = "Charlie", Surname = "Chocolate"}
+                        new Farmer { Name = "Alice", Surname = "Wonderland", Username = "AliceWonderland"},
+                        new Farmer { Name = "Bob", Surname = "Builder", Username = "BobBuilder"},
+                        new Farmer { Name = "Charlie", Surname = "Chocolate", Username = "CharlieChocolate"}
                     );
 
                     context.SaveChanges();

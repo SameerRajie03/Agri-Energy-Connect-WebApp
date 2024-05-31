@@ -81,7 +81,20 @@ namespace Agri_Energy_Connect_WebApp.Workers
 
         public static bool FarmerExists(string input, Agri_Energy_Connect_WebAppContext context)
         {
-            Farmer? farmer = context.Farmer.Where(u => u.Username == input).FirstOrDefault();
+            var farmers = context.Farmer.ToList();
+            Farmer? farmer = farmers.Where(u => u.Username == input).FirstOrDefault();
+
+            if (farmer == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public static bool FarmerUsername(Farmer? farmer, Agri_Energy_Connect_WebAppContext context)
+        {
 
             if (farmer == null)
             {
@@ -95,9 +108,24 @@ namespace Agri_Energy_Connect_WebApp.Workers
 
         public static bool EmployeeExists(string input, Agri_Energy_Connect_WebAppContext context)
         {
-            Employee? employee = context.Employee.Where(u => u.Username == input).FirstOrDefault();
+            var employees = context.Employee.ToList();
+            Employee? employee = employees.Where(u => u.Username == input).FirstOrDefault();
 
             if (employee == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public static bool EmployeeUsername(Employee? employee, Agri_Energy_Connect_WebAppContext context)
+        {
+            var employees = context.Employee.ToList();
+            int amount = employees.Where(u => u.Username == employee.Username).ToList().Count();
+            if (amount < 1)
             {
                 return false;
             }
@@ -109,7 +137,8 @@ namespace Agri_Energy_Connect_WebApp.Workers
 
         public static bool EmployeeExistsId(string input, Agri_Energy_Connect_WebAppContext context)
         {
-            Employee? employee = context.Employee.Where(u => u.EmployeeId == input).FirstOrDefault();
+            var employees = context.Employee.ToList();
+            Employee? employee = employees.Where(u => u.EmployeeId == input).FirstOrDefault();
 
             if (employee == null)
             {
@@ -121,9 +150,10 @@ namespace Agri_Energy_Connect_WebApp.Workers
             }
         }
 
-        public static bool FarmerExistsId(int input, Agri_Energy_Connect_WebAppContext context)
+        public static bool FarmerExistsId(string input, Agri_Energy_Connect_WebAppContext context)
         {
-            Farmer? farmer = context.Farmer.Where(u => u.FarmerId == input).FirstOrDefault();
+            var farmers = context.Farmer.ToList();
+            Farmer? farmer = farmers.Where(u => u.FarmerId.ToString() == input).FirstOrDefault();
 
             if (farmer == null)
             {

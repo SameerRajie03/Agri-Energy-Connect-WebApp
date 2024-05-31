@@ -25,7 +25,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         {
             var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
-            if (loginCheckResult  != null)
+            if (loginCheckResult != null)
             {
                 TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
@@ -34,7 +34,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             {
                 return View(await _context.Farmer.ToListAsync());
             }
-            
+
         }
 
         // GET: Farmers/Details/5
@@ -83,7 +83,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "You do not have access to this page";
-                    return RedirectToRoute("/Home/IndexFarmer");
+                    return RedirectToAction("IndexFarmer", "Home");
                 }
             }
         }
@@ -95,13 +95,14 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FarmerId,Name,Surname,Username,Password")] Farmer farmer)
         {
+            farmer.Username = farmer.Name + farmer.Surname;
             if (ModelState.IsValid)
             {
-                farmer.Username = farmer.FarmerId.ToString();
+                
                 _context.Add(farmer);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Farmer Added";
-                return RedirectToRoute("/Home/IndexEmployee");
+                return RedirectToAction("IndexEmployee", "Home");
             }
             return View(farmer);
         }
@@ -109,27 +110,17 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         // GET: Farmers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
-
-            if (loginCheckResult != null)
+            if (id == null)
             {
-                TempData["Login"] = "You need to Login First";
-                return loginCheckResult;
+                return NotFound();
             }
-            else
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
 
-                var farmer = await _context.Farmer.FindAsync(id);
-                if (farmer == null)
-                {
-                    return NotFound();
-                }
-                return View(farmer);
+            var farmer = await _context.Farmer.FindAsync(id);
+            if (farmer == null)
+            {
+                return NotFound();
             }
+            return View(farmer);
         }
 
         // POST: Farmers/Edit/5
@@ -148,8 +139,6 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             {
                 if (Validation.ValidPassword(farmer.Password))
                 {
-                    if (!Validation.UsernameExists(farmer.Username, _context))
-                    {
                         try
                         {
                             farmer.Password = DataTypeChange.ToHash(farmer.Password);
@@ -168,12 +157,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                                 throw;
                             }
                         }
-                        return RedirectToRoute("/LoginView/Login");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("Employee.Username", "Username already exists");
-                    }
+                    return RedirectToAction("Login", "LoginView");
                 }
                 else
                 {

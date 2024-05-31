@@ -6,7 +6,8 @@ using Agri_Energy_Connect_WebApp.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<Agri_Energy_Connect_WebAppContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Agri_Energy_Connect_WebAppContext") ?? throw new InvalidOperationException("Connection string 'Agri_Energy_Connect_WebAppContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Agri_Energy_Connect_WebAppContext") 
+    ?? throw new InvalidOperationException("Connection string 'Agri_Energy_Connect_WebAppContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -33,6 +34,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=LoginView}/{action=Login}/{id?}");
+//pattern: "{controller=Farmers}/{action=Index}/{id?}");
 
 app.Run();
 
@@ -42,9 +44,18 @@ void SeedDatabase(IHost app)
     {
         var services = scope.ServiceProvider;
 
-        DbData.InitializeCategories(services);
-        DbData.InitializeEmployees(services);
-        DbData.InitializeFarmers(services); 
-        DbData.InitializeProducts(services);
+        var logger = services.GetRequiredService<ILogger<Program>>();
+
+        try
+        {
+            DbData.InitializeCategories(services);
+            DbData.InitializeEmployees(services);
+            DbData.InitializeFarmers(services);
+            DbData.InitializeProducts(services);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred seeding the DB.");
+        }
     }
 }

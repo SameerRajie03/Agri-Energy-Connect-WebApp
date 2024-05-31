@@ -41,7 +41,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             else
             {
-                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
+                if (Validation.FarmerExistsId(GetSet.UserFarmer.ToString(), _context))
                 {
                     var agri_Energy_Connect_WebAppContext = _context.Product.Include(p => p.Category);
                     var specificFarmer = agri_Energy_Connect_WebAppContext.Where(p => p.FarmerId == id);
@@ -50,7 +50,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "You do not have access to this page";
-                    return RedirectToRoute("/Home/IndexEmployee");
+                    return RedirectToAction("IndexEmployee", "Home");
                 }
             }
             
@@ -68,7 +68,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             else
             {
-                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
+                if (Validation.FarmerExistsId(GetSet.UserFarmer.ToString(), _context))
                 {
                     if (id == null)
                     {
@@ -89,7 +89,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "You do not have access to this page";
-                    return RedirectToRoute("/Home/IndexEmployee");
+                    return RedirectToAction("IndexEmployee", "Home");
                 }
             }
             
@@ -107,7 +107,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             else
             {
-                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
+                if (Validation.FarmerExistsId(GetSet.UserFarmer.ToString(), _context))
                 {
                     ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description");
                     ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name");
@@ -116,7 +116,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "You do not have access to this page";
-                    return RedirectToRoute("/Home/IndexEmployee");
+                    return RedirectToAction("IndexEmployee", "Home");
                 }
             }
         }
@@ -152,7 +152,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             else
             {
-                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
+                if (Validation.FarmerExistsId(GetSet.UserFarmer.ToString(), _context))
                 {
                     if (id == null)
                     {
@@ -171,7 +171,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "You do not have access to this page";
-                    return RedirectToRoute("/Home/IndexEmployee");
+                    return RedirectToAction("IndexEmployee", "Home");
                 }
             }
         }
@@ -226,7 +226,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             else
             {
-                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
+                if (Validation.FarmerExistsId(GetSet.UserFarmer.ToString(), _context))
                 {
                     if (id == null)
                     {
@@ -247,7 +247,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 else
                 {
                     TempData["ErrorMessage"] = "You do not have access to this page";
-                    return RedirectToRoute("/Home/IndexEmployee");
+                    return RedirectToAction("IndexEmployee", "Home");
                 }
             }
         }
@@ -272,8 +272,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             return _context.Product.Any(e => e.ProductId == id);
         }
 
-        [HttpPost, ActionName("FilteredList")]
-        public async Task<IActionResult> FilteredList(int? selectedCategoryId, DateTime? startDate, DateTime? endDate, int? farmerId)
+        public async Task<IActionResult> FilteredList(int id)
         {
             var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
@@ -286,11 +285,61 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             {
                 if (Validation.EmployeeExistsId(GetSet.UserEmployee, _context))
                 {
-                    if (farmerId != null)
+                    if (id != 0)
                     {
                         var products = from p in _context.Product.Include(p => p.Category).Include(p => p.Farmer)
                                        select p;
-                        var farmerProduct = products.Where(f => f.FarmerId == farmerId).ToList();
+                        var farmerProduct = products.ToList();
+
+                        farmerProduct = farmerProduct.Where(f => f.FarmerId == id).ToList();
+
+
+                        var categories = await _context.Category.ToListAsync();
+
+                        var viewModel = new ProductViewModel
+                        {
+                            Products = farmerProduct,
+                            SelectedCategoryId = 0,
+                            StartDate = null,
+                            EndDate = null,
+                            Categories = categories
+                        };
+
+                        return View(viewModel);
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "You must first select a Farmer";
+                        return RedirectToAction("Index", "Farmers");
+                    }
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "You do not have access to this page";
+                    return RedirectToAction("IndexFarmer", "Home");
+                }
+            }
+        }
+
+        [HttpPost, ActionName("FilteredList")]
+        public async Task<IActionResult> FilteredList(int? selectedCategoryId, DateTime? startDate, DateTime? endDate, int id)
+        {
+            var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
+
+            if (loginCheckResult != null)
+            {
+                TempData["Login"] = "You need to Login First";
+                return loginCheckResult;
+            }
+            else
+            {
+                if (Validation.EmployeeExistsId(GetSet.UserEmployee, _context))
+                {
+                    if (id != 0)
+                    {
+                        var products = from p in _context.Product.Include(p => p.Category).Include(p => p.Farmer)
+                                       select p;
+                        var farmerProduct = products.ToList().Where(f => f.FarmerId == id).ToList();
 
                         if (selectedCategoryId.HasValue)
                         {
@@ -311,7 +360,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
                         var viewModel = new ProductViewModel
                         {
-                            Products = await products.ToListAsync(),
+                            Products = farmerProduct,
                             SelectedCategoryId = selectedCategoryId,
                             StartDate = startDate,
                             EndDate = endDate,
@@ -323,13 +372,13 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                     else
                     {
                         TempData["ErrorMessage"] = "You must first select a Farmer";
-                        return RedirectToRoute("/Farmers/Index");
+                        return RedirectToAction("Index", "Farmers");
                     }
                 }
                 else
                 {
                     TempData["ErrorMessage"] = "You do not have access to this page";
-                    return RedirectToRoute("/Home/IndexFarmer");
+                    return RedirectToAction("IndexFarmer", "Home");
                 }
             }
         }

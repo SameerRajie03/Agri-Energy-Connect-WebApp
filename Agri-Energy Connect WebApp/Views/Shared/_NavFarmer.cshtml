@@ -1,13 +1,13 @@
 ﻿<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Agri-Energy Connect</a>
+        <a class="navbar-brand" asp-controller="Home" asp-action="IndexFarmer">Agri-Energy Connect</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" asp-page="/Home/IndexFarmer">
+                    <a class="nav-link active" asp-controller="Home" asp-action="IndexFarmer">
                         Home
                         <span class="visually-hidden">(current)</span>
                     </a>
@@ -15,12 +15,9 @@
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Products" asp-action="Create">Add New Product</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-page="/ChooseAccountType">Choose Account Type</a>
-                </li>
             </ul>
             <form class="d-flex">
-                <a asp-page="/LoginView/Login" class="btn btn-light">Log Out</a>
+                <a asp-controller="LoginView" asp-action="Login" class="btn btn-light">Log Out</a>
             </form>
         </div>
     </div>

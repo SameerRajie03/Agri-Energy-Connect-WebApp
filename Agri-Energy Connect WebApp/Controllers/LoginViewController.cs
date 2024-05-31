@@ -31,15 +31,15 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             {
                 return View(model);
             }
-            if (!Validation.UsernameExists(model.Username, _context))
+            if (Validation.UsernameExists(model.Username, _context))
             {
-                if (!Validation.FarmerExists(model.Username, _context))
+                if (Validation.FarmerExists(model.Username, _context))
                 {
                     isAuthenticated = AuthenticateFarmer(model.Username, model.Password);
                     if (isAuthenticated)
                     {
                         TempData["SuccessMessage"] = model.Username + " Logged In";
-                        return RedirectToRoute("/Home/IndexFarmer");
+                        return RedirectToAction("IndexFarmer", "Home"); 
                     }
                     else
                     {
@@ -47,13 +47,13 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                         return View();
                     }
                 }
-                if (!Validation.EmployeeExists(model.Username, _context))
+                if (Validation.EmployeeExists(model.Username, _context))
                 {
                     isAuthenticated = AuthenticateEmployee(model.Username, model.Password);
                     if (isAuthenticated)
                     {
                         TempData["SuccessMessage"] = model.Username + " Logged In";
-                        return RedirectToRoute("/Home/IndexEmployee");
+                        return RedirectToAction("IndexEmployee", "Home");
                     }
                     else
                     {

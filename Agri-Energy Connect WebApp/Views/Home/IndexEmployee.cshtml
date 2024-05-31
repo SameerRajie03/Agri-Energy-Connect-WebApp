@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Add a New Farmer</h5>
                     <p class="card-text"></p>
-                    <a asp-page="/Farmers/Create" class="btn btn-success">Add Farmer</a>
+                    <a asp-controller="Farmers" asp-action="Create" class="btn btn-success">Add Farmer</a>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <div class="card-body">
                     <h5 class="card-title">View a List of Products</h5>
                     <p class="card-text"></p>
-                    <a asp-page="/Products/FilteredList" class="btn btn-danger">View Products</a>
+                    <a asp-controller="Farmers" asp-action="Index" class="btn btn-danger">View Products</a>
                 </div>
             </div>
         </div>
@@ -49,7 +49,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Logout of Account</h5>
                     <p class="card-text"></p>
-                    <a asp-page="/LoginView/Login" class="btn btn-light">Log Out</a>
+                    <a asp-controller="LoginView" asp-action="Login" class="btn btn-light">Log Out</a>
                 </div>
             </div>
         </div>

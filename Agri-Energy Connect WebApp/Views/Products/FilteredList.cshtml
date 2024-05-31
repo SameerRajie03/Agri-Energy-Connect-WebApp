@@ -21,7 +21,7 @@
 <form asp-action="FilteredList" method="get">
     <div class="form-group">
         <label asp-for="SelectedCategoryId">Category</label>
-        <select asp-for="SelectedCategoryId" class="form-control" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))">
+        <select asp-for="SelectedCategoryId" class="form-control" asp-items="@(new SelectList(Model.Categories, "CategporyId", "Description"))">
             <option value="">All Categories</option>
         </select>
     </div>
@@ -52,7 +52,6 @@
             <th>Description</th>
             <th>Production Date</th>
             <th>Category</th>
-            <th>Farmer</th>
         </tr>
     </thead>
     <tbody>
