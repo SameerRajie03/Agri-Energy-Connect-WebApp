@@ -2,6 +2,15 @@
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = "_Layout";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Success</strong> @TempData["SuccessMessage"].
+    </div>
 }
 
 <h1>Edit</h1>

@@ -30,18 +30,28 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
             var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
             {
-                var agri_Energy_Connect_WebAppContext = _context.Product.Include(p => p.Category).Include(p => p.Farmer);
-                return View(await agri_Energy_Connect_WebAppContext.ToListAsync());
+                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
+                {
+                    var agri_Energy_Connect_WebAppContext = _context.Product.Include(p => p.Category);
+                    var specificFarmer = agri_Energy_Connect_WebAppContext.Where(p => p.FarmerId == id);
+                    return View(await specificFarmer.ToListAsync());
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "You do not have access to this page";
+                    return RedirectToRoute("/Home/IndexEmployee");
+                }
             }
             
         }
@@ -53,25 +63,34 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
             {
-                if (id == null)
+                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
                 {
-                    return NotFound();
-                }
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
 
-                var product = await _context.Product
-                    .Include(p => p.Category)
-                    .Include(p => p.Farmer)
-                    .FirstOrDefaultAsync(m => m.ProductId == id);
-                if (product == null)
+                    var product = await _context.Product
+                        .Include(p => p.Category)
+                        .Include(p => p.Farmer)
+                        .FirstOrDefaultAsync(m => m.ProductId == id);
+                    if (product == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return View(product);
+                }
+                else
                 {
-                    return NotFound();
+                    TempData["ErrorMessage"] = "You do not have access to this page";
+                    return RedirectToRoute("/Home/IndexEmployee");
                 }
-
-                return View(product);
             }
             
         }
@@ -83,13 +102,22 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
             {
-                ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description");
-                ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name");
-                return View();
+                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
+                {
+                    ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description");
+                    ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name");
+                    return View();
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "You do not have access to this page";
+                    return RedirectToRoute("/Home/IndexEmployee");
+                }
             }
         }
 
@@ -119,23 +147,32 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
             {
-                if (id == null)
+                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
                 {
-                    return NotFound();
-                }
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
 
-                var product = await _context.Product.FindAsync(id);
-                if (product == null)
-                {
-                    return NotFound();
+                    var product = await _context.Product.FindAsync(id);
+                    if (product == null)
+                    {
+                        return NotFound();
+                    }
+                    ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description", product.CategoryId);
+                    ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name", product.FarmerId);
+                    return View(product);
                 }
-                ViewData["CategoryId"] = new SelectList(_context.Category, "CategporyId", "Description", product.CategoryId);
-                ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name", product.FarmerId);
-                return View(product);
+                else
+                {
+                    TempData["ErrorMessage"] = "You do not have access to this page";
+                    return RedirectToRoute("/Home/IndexEmployee");
+                }
             }
         }
 
@@ -148,6 +185,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         {
             if (id != product.ProductId)
             {
+                TempData["Login"] = "You need to Login First";
                 return NotFound();
             }
 
@@ -183,25 +221,34 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
             {
-                if (id == null)
+                if (Validation.FarmerExistsId(GetSet.UserFarmer, _context))
                 {
-                    return NotFound();
-                }
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
 
-                var product = await _context.Product
-                    .Include(p => p.Category)
-                    .Include(p => p.Farmer)
-                    .FirstOrDefaultAsync(m => m.ProductId == id);
-                if (product == null)
+                    var product = await _context.Product
+                        .Include(p => p.Category)
+                        .Include(p => p.Farmer)
+                        .FirstOrDefaultAsync(m => m.ProductId == id);
+                    if (product == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return View(product);
+                }
+                else
                 {
-                    return NotFound();
+                    TempData["ErrorMessage"] = "You do not have access to this page";
+                    return RedirectToRoute("/Home/IndexEmployee");
                 }
-
-                return View(product);
             }
         }
 
@@ -225,46 +272,65 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             return _context.Product.Any(e => e.ProductId == id);
         }
 
-        public async Task<IActionResult> FilteredList(int? selectedCategoryId, DateTime? startDate, DateTime? endDate)
+        [HttpPost, ActionName("FilteredList")]
+        public async Task<IActionResult> FilteredList(int? selectedCategoryId, DateTime? startDate, DateTime? endDate, int? farmerId)
         {
             var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
             {
-                var products = from p in _context.Product.Include(p => p.Category).Include(p => p.Farmer)
-                               select p;
-
-                if (selectedCategoryId.HasValue)
+                if (Validation.EmployeeExistsId(GetSet.UserEmployee, _context))
                 {
-                    products = products.Where(p => p.CategoryId == selectedCategoryId.Value);
+                    if (farmerId != null)
+                    {
+                        var products = from p in _context.Product.Include(p => p.Category).Include(p => p.Farmer)
+                                       select p;
+                        var farmerProduct = products.Where(f => f.FarmerId == farmerId).ToList();
+
+                        if (selectedCategoryId.HasValue)
+                        {
+                            farmerProduct = farmerProduct.Where(p => p.CategoryId == selectedCategoryId.Value).ToList();
+                        }
+
+                        if (startDate.HasValue)
+                        {
+                            farmerProduct = farmerProduct.Where(p => p.ProductionDate >= startDate.Value).ToList();
+                        }
+
+                        if (endDate.HasValue)
+                        {
+                            farmerProduct = farmerProduct.Where(p => p.ProductionDate <= endDate.Value).ToList();
+                        }
+
+                        var categories = await _context.Category.ToListAsync();
+
+                        var viewModel = new ProductViewModel
+                        {
+                            Products = await products.ToListAsync(),
+                            SelectedCategoryId = selectedCategoryId,
+                            StartDate = startDate,
+                            EndDate = endDate,
+                            Categories = categories
+                        };
+
+                        return View(viewModel);
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "You must first select a Farmer";
+                        return RedirectToRoute("/Farmers/Index");
+                    }
                 }
-
-                if (startDate.HasValue)
+                else
                 {
-                    products = products.Where(p => p.ProductionDate >= startDate.Value);
+                    TempData["ErrorMessage"] = "You do not have access to this page";
+                    return RedirectToRoute("/Home/IndexFarmer");
                 }
-
-                if (endDate.HasValue)
-                {
-                    products = products.Where(p => p.ProductionDate <= endDate.Value);
-                }
-
-                var categories = await _context.Category.ToListAsync();
-
-                var viewModel = new ProductViewModel
-                {
-                    Products = await products.ToListAsync(),
-                    SelectedCategoryId = selectedCategoryId,
-                    StartDate = startDate,
-                    EndDate = endDate,
-                    Categories = categories
-                };
-
-                return View(viewModel);
             }
         }
     }

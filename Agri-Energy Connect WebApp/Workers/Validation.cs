@@ -107,6 +107,34 @@ namespace Agri_Energy_Connect_WebApp.Workers
             }
         }
 
+        public static bool EmployeeExistsId(string input, Agri_Energy_Connect_WebAppContext context)
+        {
+            Employee? employee = context.Employee.Where(u => u.EmployeeId == input).FirstOrDefault();
+
+            if (employee == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public static bool FarmerExistsId(int input, Agri_Energy_Connect_WebAppContext context)
+        {
+            Farmer? farmer = context.Farmer.Where(u => u.FarmerId == input).FirstOrDefault();
+
+            if (farmer == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         public static bool UsernameExists(string input, Agri_Energy_Connect_WebAppContext context)
         {
             if (EmployeeExists(input, context) || FarmerExists(input, context))
@@ -172,7 +200,7 @@ namespace Agri_Energy_Connect_WebApp.Workers
             }
             else
             {
-                return new RedirectToActionResult("Login", "Login", null);
+                return new RedirectToActionResult("Login", "LoginView", null);
             }
         }
 

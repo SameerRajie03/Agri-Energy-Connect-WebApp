@@ -1,11 +1,22 @@
 ﻿using Agri_Energy_Connect_WebApp.Models;
+using Agri_Energy_Connect_WebApp.Workers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agri_Energy_Connect_WebApp.Controllers
-{
+{   
     public class ChooseAccountController : Controller
     {
-        public IActionResult ChooseAccountView()
+        private readonly Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext _context;
+        public string? AccountType { get; set; }
+        public String? EmployeeId { get; set; }
+        public int? FarmerId { get; set; }
+
+        public ChooseAccountController(Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext context)
+        {
+            _context = context;
+        }
+
+        public IActionResult ProcessAccountType()
         {
             return View();
         }
@@ -15,17 +26,32 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         {
             if (accountType == "Employee")
             {
-                // Assuming you have an action named EmployeeLogin in EmployeeController
-                return RedirectToAction("Edit", "Employees", new { id = employeeId });
+                if (!Validation.EmployeeExists(employeeId, _context))
+                {
+                    ModelState.AddModelError("EmployeeId", "Must Enter an Existing Employee ID");
+                    return View("ChooseAccountView");
+                }
+                else
+                {
+                    return RedirectToAction("Edit", "Employees", new { id = employeeId });
+                }
             }
             else if (accountType == "Farmer")
             {
-                // Assuming you have an action named FarmerLogin in FarmerController
-                return RedirectToAction("Edit", "Farmers", new { id = farmerId });
+                if (!Validation.FarmerExists(farmerId, _context))
+                {
+                    ModelState.AddModelError("FarmerId", "Must Enter an Existing Farmer ID");
+                    return View("ChooseAccountView");
+                }
+                else
+                {
+                    return RedirectToAction("Edit", "Farmers", new { id = farmerId });
+                }
             }
-
-            // In case of invalid input, stay on the same page
-            return View("ChooseAccountView");
+            else
+            {
+                return View("ChooseAccountView");
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Agri_Energy_Connect_WebApp.Data;
 using Agri_Energy_Connect_WebApp.Models;
+using Agri_Energy_Connect_WebApp.Workers;
 
 namespace Agri_Energy_Connect_WebApp.Controllers
 {
@@ -26,6 +27,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult  != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -42,6 +44,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -68,11 +71,20 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
             {
-                return View();
+                if(Validation.EmployeeExistsId(GetSet.UserEmployee, _context))
+                {
+                    return View();
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "You do not have access to this page";
+                    return RedirectToRoute("/Home/IndexFarmer");
+                }
             }
         }
 
@@ -88,7 +100,8 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 farmer.Username = farmer.FarmerId.ToString();
                 _context.Add(farmer);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = "Farmer Added";
+                return RedirectToRoute("/Home/IndexEmployee");
             }
             return View(farmer);
         }
@@ -100,6 +113,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -129,26 +143,46 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             {
                 return NotFound();
             }
-
+ 
             if (ModelState.IsValid)
             {
-                try
+                if (Validation.ValidPassword(farmer.Password))
                 {
-                    _context.Update(farmer);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FarmerExists(farmer.FarmerId))
+                    if (!Validation.UsernameExists(farmer.Username, _context))
                     {
-                        return NotFound();
+                        try
+                        {
+                            farmer.Password = DataTypeChange.ToHash(farmer.Password);
+                            _context.Update(farmer);
+                            await _context.SaveChangesAsync();
+                            TempData["SuccessMessage"] = "Username and Password Saved";
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!FarmerExists(farmer.FarmerId))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+                        return RedirectToRoute("/LoginView/Login");
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError("Employee.Username", "Username already exists");
                     }
                 }
-                return RedirectToRoute("/Login/Login");
+                else
+                {
+                    ModelState.AddModelError("Employee.Password", "Invalid Password\nPassword value must meet the following requirements: " +
+                        "\n- Be at least 8 characters long" +
+                        "\n- Contain no empty spaces" +
+                        "\n- Contain at least one capital letter" +
+                        "\n- Contain at least one number");
+                }
             }
             return View(farmer);
         }
@@ -160,6 +194,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else

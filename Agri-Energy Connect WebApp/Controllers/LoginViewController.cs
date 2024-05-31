@@ -6,18 +6,18 @@ using System.Diagnostics;
 
 namespace Agri_Energy_Connect_WebApp.Controllers
 {
-    public class LoginController : Controller
+    public class LoginViewController : Controller
     {
         private readonly Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext _context;
 
-        public LoginController(Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext context)
+        public LoginViewController(Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext context)
         {
+            GetSet.UserEmployee = null;
             GetSet.UserFarmer = 0;
-            GetSet.UserEmployee = "";
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Login()
         {
             return View();
         }
@@ -38,6 +38,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                     isAuthenticated = AuthenticateFarmer(model.Username, model.Password);
                     if (isAuthenticated)
                     {
+                        TempData["SuccessMessage"] = model.Username + " Logged In";
                         return RedirectToRoute("/Home/IndexFarmer");
                     }
                     else
@@ -51,6 +52,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                     isAuthenticated = AuthenticateEmployee(model.Username, model.Password);
                     if (isAuthenticated)
                     {
+                        TempData["SuccessMessage"] = model.Username + " Logged In";
                         return RedirectToRoute("/Home/IndexEmployee");
                     }
                     else
@@ -71,7 +73,6 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return View();
             }
         }
-
 
         private bool AuthenticateEmployee(string username, string password)
         {

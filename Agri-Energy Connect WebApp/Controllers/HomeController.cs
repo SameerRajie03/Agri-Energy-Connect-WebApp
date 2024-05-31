@@ -19,6 +19,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -33,6 +34,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -48,6 +50,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else

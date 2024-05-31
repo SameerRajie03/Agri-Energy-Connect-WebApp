@@ -5,6 +5,22 @@
 }
 @model Agri_Energy_Connect_WebApp.Models.LoginViewModel
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Success</strong> @TempData["SuccessMessage"].
+    </div>
+}
+
+@if (TempData["Login"] != null)
+{
+    <div class="alert alert-dismissible alert-danger"> 
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Error</strong> @TempData["Login"].
+    </div>
+}
+
 <div>
     <h1>Login</h1>
     <hr />
@@ -29,7 +45,10 @@
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div asp-validation-summary="All" class="text-danger"></div>
-        <button type="submit" class="btn btn-primary">Login </button>
+        <div class="input-group">
+            <button type="submit" class="btn btn-primary">Login</button>
+            <a asp-controller="ChooseAccount" asp-action="ProcessAccountType" class="btn btn-link">Don't Have an Account?'</a>
+        </div>
     </form>
 </div>
 

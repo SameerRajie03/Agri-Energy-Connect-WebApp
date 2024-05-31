@@ -4,10 +4,26 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Success</strong> @TempData["SuccessMessage"].
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-warning">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Warning</strong> @TempData["ErrorMessage"].
+    </div>
+}
+
+<h1>Choose a Farmer</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Select</a>
 </p>
 <table class="table">
     <thead>
@@ -20,9 +36,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
             </th>
             <th></th>
         </tr>
@@ -40,12 +53,7 @@
                 @Html.DisplayFor(modelItem => item.Username)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.FarmerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FarmerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FarmerId">Delete</a>
+                    | <a asp-action="FilteredList" asp-route-id="@item.FarmerId">Select</a> |
             </td>
         </tr>
 }

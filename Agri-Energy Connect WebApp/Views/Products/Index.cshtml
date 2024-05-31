@@ -4,7 +4,15 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Success</strong> @TempData["SuccessMessage"].
+    </div>
+}
+
+<h1>Your Products</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -24,9 +32,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Farmer)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -44,9 +49,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Farmer.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |

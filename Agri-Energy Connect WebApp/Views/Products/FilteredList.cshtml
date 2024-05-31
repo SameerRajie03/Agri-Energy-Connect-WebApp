@@ -3,6 +3,14 @@
 @{
     Layout = "_LayoutEmployee";
 }
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Success</strong> @TempData["SuccessMessage"].
+    </div>
+}
 <head>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
@@ -55,7 +63,6 @@
                 <td>@product.Description</td>
                 <td>@product.ProductionDate.ToShortDateString()</td>
                 <td>@product.Category?.Description</td>
-                <td>@(product.Farmer != null ? product.Farmer.Name + " " + product.Farmer.Surname : "")</td>
             </tr>
         }
     </tbody>

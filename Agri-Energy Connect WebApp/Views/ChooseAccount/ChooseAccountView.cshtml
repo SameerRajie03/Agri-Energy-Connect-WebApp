@@ -4,7 +4,7 @@
     ViewData["Title"] = "Choose Account Type";
 }
 
-<h1>Choose Account Type</h1>
+<h1>Choose Type of Account</h1>
 
 <form method="post" asp-controller="ChooseAccount" asp-action="ProcessAccountType">
     <div>
@@ -19,10 +19,12 @@
     <div id="employeeIdField" style="display:none;">
         <label for="employeeId">Employee ID:</label>
         <input type="text" id="employeeId" name="employeeId" />
+        <span asp-validation-for="EmployeeId" class="text-danger"></span>
     </div>
     <div id="farmerIdField" style="display:none;">
         <label for="farmerId">Farmer ID:</label>
         <input type="text" id="farmerId" name="farmerId" />
+        <span asp-validation-for="FarmerId" class="text-danger"></span>
     </div>
 
     <div>

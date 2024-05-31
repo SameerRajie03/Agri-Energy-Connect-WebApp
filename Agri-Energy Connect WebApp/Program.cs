@@ -32,7 +32,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=LoginView}/{action=Login}/{id?}");
 
 app.Run();
 
@@ -43,5 +43,8 @@ void SeedDatabase(IHost app)
         var services = scope.ServiceProvider;
 
         DbData.InitializeCategories(services);
+        DbData.InitializeEmployees(services);
+        DbData.InitializeFarmers(services); 
+        DbData.InitializeProducts(services);
     }
 }

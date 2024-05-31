@@ -1,13 +1,13 @@
 ﻿<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" asp-page="/Home/Index">Agri-Energy Connect</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link active" asp-page="/Home/Index">
                         Home
                         <span class="visually-hidden">(current)</span>
                     </a>
@@ -18,31 +18,7 @@
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="Login" asp-action="Login">Login</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Product</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-controller="Product" asp-action="Create">Create</a>
-                        <a class="dropdown-item" asp-controller="Product" asp-action="Edit">Edit</a>
-                        <a class="dropdown-item" asp-controller="Product" asp-action="Delete">Delete</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" asp-controller="Product" asp-action="FilteredList">List</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Farmer</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-controller="Farmer" asp-action="Create">Create</a>
-                        <a class="dropdown-item" asp-controller="Farmer" asp-action="Edit">Edit</a>
-                        <a class="dropdown-item" asp-controller="Farmer" asp-action="Delete">Delete</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" asp-controller="Farmer" asp-action="Index">List</a>
-                    </div>
-                </li>
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-sm-2" type="search" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
         </div>
     </div>
 </nav>

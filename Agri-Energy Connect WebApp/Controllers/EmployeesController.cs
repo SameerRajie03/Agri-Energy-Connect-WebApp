@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Agri_Energy_Connect_WebApp.Data;
 using Agri_Energy_Connect_WebApp.Models;
+using Agri_Energy_Connect_WebApp.Workers;
 
 namespace Agri_Energy_Connect_WebApp.Controllers
 {
@@ -26,6 +27,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -41,6 +43,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -68,6 +71,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -100,6 +104,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
@@ -132,23 +137,43 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (Validation.ValidPassword(employee.Password))
                 {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.EmployeeId))
+                    if(!Validation.UsernameExists(employee.Username, _context))
                     {
-                        return NotFound();
+                        try
+                        {
+                            employee.Password = DataTypeChange.ToHash(employee.Password);
+                            _context.Update(employee);
+                            await _context.SaveChangesAsync();
+                            TempData["SuccessMessage"] = "Username and Password Saved";
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!EmployeeExists(employee.EmployeeId))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+                        return RedirectToRoute("/LoginView/Login");
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError("Employee.Username", "Username already exists"); 
                     }
                 }
-                return RedirectToRoute("/Login/Login");
+                else
+                {
+                    ModelState.AddModelError("Employee.Password", "Invalid Password\nPassword value must meet the following requirements: " +
+                        "\n- Be at least 8 characters long" +
+                        "\n- Contain no empty spaces" +
+                        "\n- Contain at least one capital letter" +
+                        "\n- Contain at least one number");
+                }
             }
             return View(employee);
         }
@@ -160,6 +185,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 
             if (loginCheckResult != null)
             {
+                TempData["Login"] = "You need to Login First";
                 return loginCheckResult;
             }
             else
