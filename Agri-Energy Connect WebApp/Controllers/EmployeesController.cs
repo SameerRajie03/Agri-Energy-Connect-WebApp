@@ -14,13 +14,22 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 {
     public class EmployeesController : Controller
     {
+        /// <summary>
+        /// when any class/view calls for this controller, the app's context is parsed to a variable in the constructer.
+        /// the value of that variable is them assigned to a read only variable that is globally assigned for the class.
+        /// </summary>
         private readonly Agri_Energy_Connect_WebAppContext _context;
 
         public EmployeesController(Agri_Energy_Connect_WebAppContext context)
         {
             _context = context;
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// All get classes first checks if there is a user that is logged into the application for added security.
+        /// If a user who isn't logged in tries to access those pages, they will be redirected to the login page with an error notification.
+        /// If a user who doesn't have access to the page tries to access the page, they will be redirected to their respective home page.
+        /// </summary>
         // GET: Employees
         public async Task<IActionResult> Index()
         {
@@ -36,7 +45,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return View(await _context.Employee.ToListAsync());
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(string id)
         {
@@ -64,7 +73,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return View(employee);
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Employees/Create
         public IActionResult Create()
         {
@@ -80,16 +89,15 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return View();
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // POST: Employees/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EmployeeId,Name,Surname,Username,Password")] Employee employee)
         {
             if (ModelState.IsValid)
             {
+                //IDs auto iterate so that when a new Employee is added
                 employee.Username = employee.EmployeeId.ToString();
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
@@ -97,7 +105,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             return View(employee);
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -113,10 +121,13 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             return View(employee);
         }
-
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Allows the Employee to create their password
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="employee"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("EmployeeId,Name,Surname,Username,Password")] Employee employee)
@@ -161,7 +172,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             return View(employee);
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
@@ -189,7 +200,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return View(employee);
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -204,11 +215,17 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Checks if the chosen employee iexists in the current context
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private bool EmployeeExists(string id)
         {
             return _context.Employee.Any(e => e.EmployeeId == id);
         }
+        //---------------------------------------------------------------------------------------------------------------------------------
     }
 }
-
+//--------------------------------------------------End of Code------------------------------------------------------------

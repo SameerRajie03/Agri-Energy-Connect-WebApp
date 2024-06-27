@@ -8,6 +8,13 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 {
     public class LoginViewController : Controller
     {
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// when any class/view calls for this controller, the app's context is parsed to a variable in the constructer.
+        /// the value of that variable is them assigned to a read only variable that is globally assigned for the class.
+        /// 
+        /// The Globally set variables to save the logged in users are reset to log them out of the app
+        /// </summary>
         private readonly Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext _context;
 
         public LoginViewController(Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext context)
@@ -16,12 +23,22 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             GetSet.UserFarmer = 0;
             _context = context;
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Loads the login page
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Login()
         {
             return View();
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// calls methods to check if the login details are valid.
+        /// if they are valid it calls the methods to log the user in either as an employee or a farmer.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
@@ -73,7 +90,14 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return View();
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// if the details to login matches that of an employee, the user logs in as an Employee.
+        /// That redirects them to the relevent home page
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         private bool AuthenticateEmployee(string username, string password)
         {
             // Add your logic to check the username and password against your user database
@@ -97,7 +121,14 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return false;
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// if the details to login matches that of a farmer, the user logs in as a Farmer.
+        /// That redirects them to the relevent home page
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         private bool AuthenticateFarmer(string username, string password)
         {
             // Add your logic to check the username and password against your user database
@@ -121,5 +152,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return false;
             }
         }
+        //---------------------------------------------------------------------------------------------------------------------------------
     }
 }
+//--------------------------------------------------End of Code------------------------------------------------------------

@@ -6,6 +6,10 @@ namespace Agri_Energy_Connect_WebApp.Workers
 {
     public class DbData
     {
+        /// <summary>
+        /// Method to add dummy data to the category table
+        /// </summary>
+        /// <param name="serviceProvider"></param>
         public static void InitializeCategories(IServiceProvider serviceProvider)
         {
             try
@@ -34,7 +38,11 @@ namespace Agri_Energy_Connect_WebApp.Workers
                 logger.LogError(ex, "An error occurred seeding the DB.");
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Method to add dummy data to the Employees table
+        /// </summary>
+        /// <param name="serviceProvider"></param>
         public static void InitializeEmployees(IServiceProvider serviceProvider)
         {
             try
@@ -60,7 +68,11 @@ namespace Agri_Energy_Connect_WebApp.Workers
                 logger.LogError(ex, "An error occurred seeding the DB.");
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Method to add dummy data to the Farmers Table
+        /// </summary>
+        /// <param name="serviceProvider"></param>
         public static void InitializeFarmers(IServiceProvider serviceProvider)
         {
             try
@@ -86,6 +98,11 @@ namespace Agri_Energy_Connect_WebApp.Workers
                 logger.LogError(ex, "An error occurred seeding the DB.");
             }
         }
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Method to add dummy data to the Products table
+        /// </summary>
+        /// <param name="serviceProvider"></param>
         public static void InitializeProducts(IServiceProvider serviceProvider)
         {
             try
@@ -156,5 +173,7 @@ namespace Agri_Energy_Connect_WebApp.Workers
                 logger.LogError(ex, "An error occurred seeding the DB.");
             }
         }
+        //---------------------------------------------------------------------------------------------------------------------------------
     }
 }
+//--------------------------------------------------End of Code------------------------------------------------------------

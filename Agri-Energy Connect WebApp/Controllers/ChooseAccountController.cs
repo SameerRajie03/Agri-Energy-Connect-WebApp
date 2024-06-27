@@ -6,21 +6,40 @@ namespace Agri_Energy_Connect_WebApp.Controllers
 {   
     public class ChooseAccountController : Controller
     {
-        private readonly Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext _context;
+        /// <summary>
+        /// variables that are declared globally so that the view can save their choices
+        /// </summary>
         public string? AccountType { get; set; }
         public String? EmployeeId { get; set; }
         public int? FarmerId { get; set; }
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// when any class/view calls for this controller, the app's context is parsed to a variable in the constructer.
+        /// the value of that variable is them assigned to a read only variable that is globally assigned for the class.
+        /// </summary>
+        private readonly Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext _context;
 
         public ChooseAccountController(Agri_Energy_Connect_WebApp.Data.Agri_Energy_Connect_WebAppContext context)
         {
             _context = context;
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Loads the desired view
+        /// </summary>
+        /// <returns></returns>
         public IActionResult ChooseAccountView()
         {
             return View();
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Checks that whichever id is input, matches one that exists in the context of the account type that the user selected
+        /// </summary>
+        /// <param name="accountType"></param>
+        /// <param name="employeeId"></param>
+        /// <param name="farmerId"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult ProcessAccountType(string accountType, string employeeId, string farmerId)
         {
@@ -55,5 +74,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 return View("ChooseAccountView");
             }
         }
+        //---------------------------------------------------------------------------------------------------------------------------------
     }
 }
+//--------------------------------------------------End of Code------------------------------------------------------------

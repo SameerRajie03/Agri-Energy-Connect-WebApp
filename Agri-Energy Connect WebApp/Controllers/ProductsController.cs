@@ -11,6 +11,8 @@ using Agri_Energy_Connect_WebApp.Workers;
 
 namespace Agri_Energy_Connect_WebApp.Controllers
 {
+    //---------------------------------------------------------------------------------------------------------------------------------
+    //Temporary model for viewing only the product's details that we want to show
     public class ProductViewModel
     {
         public List<Product> Products { get; set; }
@@ -19,16 +21,27 @@ namespace Agri_Energy_Connect_WebApp.Controllers
         public DateTime? EndDate { get; set; }
         public List<Category> Categories { get; set; }
     }
-
+    //---------------------------------------------------------------------------------------------------------------------------------
     public class ProductsController : Controller
     {
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// when any class/view calls for this controller, the app's context is parsed to a variable in the constructer.
+        /// the value of that variable is them assigned to a read only variable that is globally assigned for the class.
+        /// </summary>
         private readonly Agri_Energy_Connect_WebAppContext _context;
 
         public ProductsController(Agri_Energy_Connect_WebAppContext context)
         {
             _context = context;
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// All get classes first checks if there is a user that is logged into the application for added security.
+        /// If a user who isn't logged in tries to access those pages, they will be redirected to the login page with an error notification.
+        /// If a user who doesn't have access to the page tries to access the page, they will be redirected to their respective home page.
+        /// </summary>
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Products
         public async Task<IActionResult> Index(int id)
         {
@@ -55,7 +68,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -94,7 +107,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             }
             
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -120,16 +133,15 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 }
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,Name,Description,ProductionDate,CategoryId,FarmerId")] Product product)
         {
             if (ModelState.IsValid)
             {
+                //IDs auto iterate so that when a new product is added
                 product.FarmerId = GetSet.UserFarmer;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
@@ -139,7 +151,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name", product.FarmerId);
             return View(product);
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -175,10 +187,8 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 }
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Description,ProductionDate,CategoryId,FarmerId")] Product product)
@@ -213,7 +223,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             ViewData["FarmerId"] = new SelectList(_context.Farmer, "FarmerId", "Name", product.FarmerId);
             return View(product);
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -251,7 +261,7 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 }
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -266,12 +276,22 @@ namespace Agri_Energy_Connect_WebApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Checks that the product id chosen does exist
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Method that creates the list of products that were made by the selected farmer
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> FilteredList(int id)
         {
             var loginCheckResult = Workers.Validation.UserLoggedIn(Workers.GetSet.UserFarmer, Workers.GetSet.UserEmployee);
@@ -320,7 +340,15 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                 }
             }
         }
-
+        //---------------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Method that creates the list of products that fits with the parameters the user wants to filtet with
+        /// </summary>
+        /// <param name="selectedCategoryId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("FilteredList")]
         public async Task<IActionResult> FilteredList(int? selectedCategoryId, DateTime? startDate, DateTime? endDate, int id)
         {
@@ -381,7 +409,8 @@ namespace Agri_Energy_Connect_WebApp.Controllers
                     return RedirectToAction("IndexFarmer", "Home");
                 }
             }
+            //---------------------------------------------------------------------------------------------------------------------------------
         }
     }
 }
-
+//--------------------------------------------------End of Code------------------------------------------------------------
